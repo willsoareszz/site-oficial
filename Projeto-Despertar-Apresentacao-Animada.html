@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Projeto Despertar — Recomeço Financeiro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1220;
+    --ink-2:#101B2E;
+    --panel:#152A45;
+    --panel-2:#16233A;
+    --line: rgba(244,239,228,0.12);
+    --paper:#F4EFE4;
+    --paper-dim: rgba(244,239,228,0.62);
+    --paper-faint: rgba(244,239,228,0.36);
+    --dawn:#F2A93B;
+    --dawn-soft: rgba(242,169,59,0.16);
+    --coral:#E8604C;
+    --green:#4FA383;
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--sans);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  .section{
+    position:relative;
+    padding:7rem 6vw;
+    max-width:1180px;
+    margin:0 auto;
+  }
+  .section-narrow{max-width:880px;}
+
+  /* ---------- reveal-on-scroll ---------- */
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+  .reveal-delay-1.in{transition-delay:.12s;}
+  .reveal-delay-2.in{transition-delay:.24s;}
+  .reveal-delay-3.in{transition-delay:.36s;}
+  .reveal-delay-4.in{transition-delay:.48s;}
+  .reveal-delay-5.in{transition-delay:.6s;}
+
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--dawn);
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    margin-bottom:1.4rem;
+  }
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--dawn);display:inline-block;}
+
+  h1,h2,h3{font-family:var(--serif); font-weight:600; margin:0; color:var(--paper);}
+  p{color:var(--paper-dim); margin:.9rem 0 0;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:6vw;
+    position:relative;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% 115%, rgba(242,169,59,0.22), transparent 60%),
+      linear-gradient(180deg, #070C16 0%, #0A1220 55%, #101B2E 100%);
+    overflow:hidden;
+  }
+  .hero-kicker{
+    font-family:var(--mono);
+    font-size:.78rem;
+    letter-spacing:.24em;
+    text-transform:uppercase;
+    color:var(--paper-faint);
+    margin-bottom:2rem;
+  }
+  .hero h1{
+    font-size:clamp(2.4rem, 6vw, 4.6rem);
+    line-height:1.06;
+    max-width:15ch;
+    font-weight:600;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--dawn);
+    font-weight:500;
+  }
+  .hero .sub{
+    font-size:clamp(1.05rem, 1.6vw, 1.3rem);
+    max-width:46ch;
+    margin-top:1.6rem;
+    color:var(--paper-dim);
+  }
+  .hero-cta{
+    margin-top:2.6rem;
+    display:flex;
+    gap:1.2rem;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:.95rem;
+    padding:.95rem 1.8rem;
+    border-radius:2px;
+    background:var(--dawn);
+    color:#1A1204;
+    border:none;
+    cursor:pointer;
+    letter-spacing:.01em;
+    transition:transform .25s ease, box-shadow .25s ease;
+    box-shadow:0 0 0 0 rgba(242,169,59,0.4);
+  }
+  .btn:hover{transform:translateY(-2px); box-shadow:0 10px 26px -8px rgba(242,169,59,0.55);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--paper);
+    border:1px solid var(--line);
+  }
+  .btn-ghost:hover{border-color:var(--dawn); color:var(--dawn); box-shadow:none;}
+
+  .price-tag{font-family:var(--mono); font-size:.8rem; color:var(--paper-faint);}
+
+  /* ---------- horizon / signature element ---------- */
+  .horizon-wrap{
+    position:relative;
+    height:210px;
+    margin-top:4.5rem;
+  }
+  .horizon-wrap svg{width:100%; height:100%; overflow:visible;}
+  .arc-path{fill:none; stroke:var(--line); stroke-width:1; stroke-dasharray:2 5;}
+  .sun{
+    fill:var(--dawn);
+    filter: drop-shadow(0 0 14px rgba(242,169,59,0.75));
+  }
+  #sunTravel{ animation: risesun 2.6s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes risesun{
+    from{ offset-distance: 0%; opacity:0;}
+    to{ offset-distance: 100%; opacity:1;}
+  }
+  .day-tick{font-family:var(--mono); font-size:.62rem; fill:var(--paper-faint);}
+  .day-tick-label{font-family:var(--mono); font-size:.62rem; fill:var(--paper-faint);}
+
+  /* ---------- pain / diagnosis ---------- */
+  .pain-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:3rem;
+  }
+  .pain-item{
+    background:var(--ink);
+    padding:2.2rem 2rem;
+  }
+  .pain-item .q{font-family:var(--mono); color:var(--coral); font-size:.72rem; letter-spacing:.06em;}
+  .pain-item p{color:var(--paper); font-size:1.05rem; margin-top:.7rem; font-family:var(--serif); font-weight:400; line-height:1.4;}
+
+  /* ---------- method / triade ---------- */
+  .triade-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.5rem;
+    margin-top:3rem;
+  }
+  .triade-card{
+    border:1px solid var(--line);
+    padding:2.2rem 1.8rem 2rem;
+    position:relative;
+    background:linear-gradient(180deg, var(--panel-2), var(--ink));
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .triade-card:hover{transform:translateY(-6px); border-color:var(--dawn);}
+  .triade-num{
+    font-family:var(--mono);
+    color:var(--dawn);
+    font-size:.75rem;
+    letter-spacing:.1em;
+  }
+  .triade-card h3{font-size:1.5rem; margin-top:.8rem;}
+  .triade-card p{font-size:.95rem;}
+
+  /* ---------- timeline / jornada ---------- */
+  .timeline{
+    margin-top:3.5rem;
+    display:flex;
+    flex-direction:column;
+    gap:0;
+  }
+  .tl-row{
+    display:grid;
+    grid-template-columns:90px 1fr;
+    gap:1.6rem;
+    padding:1.6rem 0;
+    border-top:1px solid var(--line);
+    align-items:start;
+  }
+  .tl-row:last-child{border-bottom:1px solid var(--line);}
+  .tl-day{font-family:var(--mono); color:var(--dawn); font-size:.85rem; padding-top:.2rem;}
+  .tl-title{font-family:var(--serif); font-size:1.25rem; color:var(--paper);}
+  .tl-desc{font-size:.92rem; color:var(--paper-dim); margin-top:.35rem; max-width:60ch;}
+  .tl-bar{
+    height:3px;
+    background:var(--line);
+    margin-top:.9rem;
+    position:relative;
+    overflow:hidden;
+    max-width:340px;
+  }
+  .tl-bar-fill{
+    position:absolute; inset:0 100% 0 0;
+    background:var(--dawn);
+    transition:right 1.1s cubic-bezier(.3,.8,.3,1);
+  }
+  .tl-row.in .tl-bar-fill{ right: var(--fillstop, 0%); }
+
+  /* ---------- avatar ---------- */
+  .avatar-box{
+    margin-top:3rem;
+    border:1px solid var(--line);
+    padding:2.4rem;
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:2.2rem;
+    align-items:center;
+  }
+  .avatar-portrait{
+    width:180px; height:180px;
+    border:1px solid var(--dawn);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-size:3.2rem; color:var(--dawn);
+  }
+  .avatar-tags{display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem;}
+  .tag{font-family:var(--mono); font-size:.68rem; border:1px solid var(--line); padding:.3rem .6rem; color:var(--paper-dim);}
+
+  /* ---------- quiz / perfis ---------- */
+  .perfis-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-top:3rem;
+  }
+  .perfil-card{
+    background:var(--ink);
+    padding:1.6rem 1.2rem;
+    min-height:190px;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .perfil-card .name{font-family:var(--serif); font-size:1.05rem; color:var(--dawn);}
+  .perfil-card .desc{font-size:.78rem; color:var(--paper-faint); margin-top:.6rem;}
+
+  /* ---------- oferta ---------- */
+  .stack{
+    margin-top:3rem;
+    border:1px solid var(--line);
+  }
+  .stack-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:1.1rem 1.6rem;
+    border-bottom:1px solid var(--line);
+    font-size:.95rem;
+  }
+  .stack-row:last-child{border-bottom:none;}
+  .stack-row .val{font-family:var(--mono); color:var(--paper-faint);}
+  .stack-row.total{background:var(--panel-2);}
+  .stack-row.total .val{color:var(--dawn); font-size:1.1rem;}
+  .price-block{
+    margin-top:2.5rem;
+    display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap;
+  }
+  .price-old{font-family:var(--mono); color:var(--paper-faint); text-decoration:line-through; font-size:1.1rem;}
+  .price-new{font-family:var(--serif); font-size:3.4rem; color:var(--dawn); font-weight:600;}
+  .price-tail{font-family:var(--mono); font-size:.85rem; color:var(--paper-faint);}
+  .guarantee{
+    margin-top:1.8rem;
+    border:1px dashed var(--green);
+    color:var(--green);
+    font-family:var(--mono);
+    font-size:.8rem;
+    padding:1rem 1.4rem;
+    display:inline-block;
+  }
+
+  /* ---------- final ---------- */
+  .final{
+    text-align:center;
+    padding-top:6rem;
+    padding-bottom:8rem;
+  }
+  .final h2{font-size:clamp(2rem,5vw,3.2rem); max-width:20ch; margin:0 auto;}
+  .final .sub{max-width:48ch; margin:1.4rem auto 0;}
+  .final .btn{margin-top:2.4rem; font-size:1.05rem; padding:1.15rem 2.4rem;}
+  .disclaimer{
+    margin-top:5rem;
+    border-top:1px solid var(--line);
+    padding-top:2rem;
+    font-size:.78rem;
+    color:var(--paper-faint);
+    max-width:70ch;
+  }
+
+  ::selection{background:var(--dawn); color:#1A1204;}
+
+  @media (max-width: 860px){
+    .pain-grid, .triade-grid, .perfis-grid{grid-template-columns:1fr;}
+    .avatar-box{grid-template-columns:1fr;}
+    .avatar-portrait{width:100px; height:100px; font-size:2rem;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">Projeto Despertar</div>
+  <h1 class="reveal in">Você não tem um problema com<br><em>dinheiro.</em> Você tem um método<br>que nunca te ensinaram.</h1>
+  <p class="sub reveal in reveal-delay-1">Desafio 21 Dias: Recomeço Financeiro — organize suas contas, gere sua primeira renda extra e faça seu primeiro investimento, mesmo começando do zero.</p>
+  <div class="hero-cta reveal in reveal-delay-2">
+    <button class="btn">Quero Começar Meu Recomeço</button>
+    <button class="btn btn-ghost">Ver o Método</button>
+  </div>
+
+  <div class="horizon-wrap reveal in reveal-delay-3">
+    <svg viewBox="0 0 1000 210" preserveAspectRatio="xMidYMax meet">
+      <path id="arc" class="arc-path" d="M 20 190 Q 500 -40 980 190"/>
+      <line x1="0" y1="190" x2="1000" y2="190" stroke="var(--line)" stroke-width="1"/>
+      <circle class="sun" r="9" id="sunTravel" style="offset-path:path('M 20 190 Q 500 -40 980 190');"/>
+      <text class="day-tick-label" x="20" y="207">DIA 1 · CONTROLE</text>
+      <text class="day-tick-label" x="430" y="207">DIA 10 · INJEÇÃO</text>
+      <text class="day-tick-label" x="880" y="207">DIA 21 · MULTIPLICAÇÃO</text>
+    </svg>
+  </div>
+</section>
+
+<!-- DIAGNÓSTICO -->
+<section class="section">
+  <div class="eyebrow reveal">O diagnóstico</div>
+  <h2 class="reveal" style="font-size:clamp(1.8rem,3.4vw,2.6rem); max-width:22ch;">O problema nunca foi falta de esforço.</h2>
+  <p class="reveal reveal-delay-1" style="max-width:60ch;">É que ninguém te ensinou a sequência certa. A maioria tenta cortar gasto sem gerar caixa, ou fala de investimento sem antes organizar a base. Falta o meio do caminho.</p>
+
+  <div class="pain-grid">
+    <div class="pain-item reveal"><div class="q">SINTOMA 01</div><p>"Não sei pra onde meu dinheiro vai — some antes do fim do mês."</p></div>
+    <div class="pain-item reveal reveal-delay-1"><div class="q">SINTOMA 02</div><p>"Já tentei controlar os gastos várias vezes e sempre desisto."</p></div>
+    <div class="pain-item reveal reveal-delay-2"><div class="q">SINTOMA 03</div><p>"Investir parece coisa de quem já tem dinheiro sobrando."</p></div>
+    <div class="pain-item reveal reveal-delay-3"><div class="q">SINTOMA 04</div><p>"Sinto que, do jeito que vou, nunca vou sair do lugar."</p></div>
+  </div>
+</section>
+
+<!-- MÉTODO -->
+<section class="section">
+  <div class="eyebrow reveal">O mecanismo</div>
+  <h2 class="reveal" style="font-size:clamp(1.8rem,3.4vw,2.6rem); max-width:22ch;">O Método Tríade do Recomeço</h2>
+  <p class="reveal reveal-delay-1" style="max-width:60ch;">Três frentes, nesta ordem — não é mágica, é sequência.</p>
+
+  <div class="triade-grid">
+    <div class="triade-card reveal">
+      <div class="triade-num">01 · CONTROLE</div>
+      <h3>Entenda sem culpa</h3>
+      <p>Você mapeia, com clareza, para onde seu dinheiro realmente vai — antes de qualquer corte ou plano.</p>
+    </div>
+    <div class="triade-card reveal reveal-delay-1">
+      <div class="triade-num">02 · INJEÇÃO</div>
+      <h3>Gere caixa rápido</h3>
+      <p>Ative uma fonte de renda extra de baixo custo, sem depender de ganhar mais no seu emprego atual.</p>
+    </div>
+    <div class="triade-card reveal reveal-delay-2">
+      <div class="triade-num">03 · MULTIPLICAÇÃO</div>
+      <h3>Dê o primeiro passo</h3>
+      <p>Use parte da renda extra para fazer, com consciência, seu primeiro investimento — de forma educacional.</p>
+    </div>
+  </div>
+</section>
+
+<!-- JORNADA -->
+<section class="section">
+  <div class="eyebrow reveal">A jornada de 21 dias</div>
+  <h2 class="reveal" style="font-size:clamp(1.8rem,3.4vw,2.6rem); max-width:24ch;">Um passo de cada vez, na ordem certa.</h2>
+
+  <div class="timeline">
+    <div class="tl-row reveal" style="--fillstop:15%;">
+      <div class="tl-day">DIA 1–3</div>
+      <div><div class="tl-title">Diagnóstico Sem Culpa</div><div class="tl-desc">Raio-X das suas entradas, saídas e os 3 maiores vazamentos de dinheiro.</div><div class="tl-bar"><div class="tl-bar-fill"></div></div></div>
+    </div>
+    <div class="tl-row reveal reveal-delay-1" style="--fillstop:30%;">
+      <div class="tl-day">DIA 4–7</div>
+      <div><div class="tl-title">Controle na Ponta do Lápis</div><div class="tl-desc">Orçamento simples e sustentável, mesmo com renda curta.</div><div class="tl-bar"><div class="tl-bar-fill"></div></div></div>
+    </div>
+    <div class="tl-row reveal reveal-delay-2" style="--fillstop:55%;">
+      <div class="tl-day">DIA 8–13</div>
+      <div><div class="tl-title">Injeção de Caixa</div><div class="tl-desc">Escolha e ativação de uma fonte validada de renda extra de baixo custo.</div><div class="tl-bar"><div class="tl-bar-fill"></div></div></div>
+    </div>
+    <div class="tl-row reveal reveal-delay-3" style="--fillstop:68%;">
+      <div class="tl-day">DIA 14–16</div>
+      <div><div class="tl-title">Reserva de Segurança Mínima</div><div class="tl-desc">Primeira "almofada" formada com parte do caixa gerado.</div><div class="tl-bar"><div class="tl-bar-fill"></div></div></div>
+    </div>
+    <div class="tl-row reveal reveal-delay-4" style="--fillstop:90%;">
+      <div class="tl-day">DIA 17–20</div>
+      <div><div class="tl-title">Primeiros Passos em Investimento</div><div class="tl-desc">Lógica básica de juros, tipos de investimento e o primeiro real investido.</div><div class="tl-bar"><div class="tl-bar-fill"></div></div></div>
+    </div>
+    <div class="tl-row reveal reveal-delay-5" style="--fillstop:100%;">
+      <div class="tl-day">DIA 21</div>
+      <div><div class="tl-title">Mentalidade de Continuidade</div><div class="tl-desc">Revisão dos 20 dias e plano para os próximos 90.</div><div class="tl-bar"><div class="tl-bar-fill"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AVATAR -->
+<section class="section section-narrow">
+  <div class="eyebrow reveal">Para quem é</div>
+  <h2 class="reveal" style="font-size:clamp(1.8rem,3.4vw,2.4rem);">Feito para quem está começando do zero.</h2>
+  <div class="avatar-box reveal reveal-delay-1">
+    <div class="avatar-portrait">M</div>
+    <div>
+      <div style="font-family:var(--serif); font-size:1.3rem;">Marcia, 34 anos</div>
+      <p style="margin-top:.4rem;">CLT, renda curta, cartão de crédito estourado. Quer clareza e controle antes de sonhar em investir — não precisa ganhar mais, precisa de método.</p>
+      <div class="avatar-tags">
+        <span class="tag">renda curta</span>
+        <span class="tag">endividada</span>
+        <span class="tag">já tentou antes</span>
+        <span class="tag">quer estabilidade</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="section">
+  <div class="eyebrow reveal">O ponto de entrada</div>
+  <h2 class="reveal" style="font-size:clamp(1.8rem,3.4vw,2.6rem); max-width:22ch;">Raio-X do Seu Dinheiro</h2>
+  <p class="reveal reveal-delay-1" style="max-width:60ch;">Um diagnóstico de 2 minutos que identifica o perfil financeiro de cada pessoa e a prepara para o Desafio.</p>
+
+  <div class="perfis-grid">
+    <div class="perfil-card reveal"><div class="name">No Escuro</div><div class="desc">Não sabe para onde o dinheiro vai.</div></div>
+    <div class="perfil-card reveal reveal-delay-1"><div class="name">Apagando Incêndio</div><div class="desc">Organiza, mas vive no zero a zero.</div></div>
+    <div class="perfil-card reveal reveal-delay-2"><div class="name">Pronto Para Multiplicar</div><div class="desc">Tem controle, falta o 1º investimento.</div></div>
+    <div class="perfil-card reveal reveal-delay-3"><div class="name">Cético Cansado</div><div class="desc">Já tentou várias vezes, desconfia.</div></div>
+    <div class="perfil-card reveal reveal-delay-4"><div class="name">Quer Tudo Agora</div><div class="desc">Alta disposição, falta ordem.</div></div>
+  </div>
+</section>
+
+<!-- OFERTA -->
+<section class="section section-narrow">
+  <div class="eyebrow reveal">A oferta</div>
+  <h2 class="reveal" style="font-size:clamp(1.8rem,3.4vw,2.6rem);">Tudo o que você recebe</h2>
+
+  <div class="stack reveal reveal-delay-1">
+    <div class="stack-row"><span>E-book + Desafio 21 Dias</span><span class="val">R$ 97</span></div>
+    <div class="stack-row"><span>Bônus · Planilha Raio-X Automática</span><span class="val">R$ 47</span></div>
+    <div class="stack-row"><span>Bônus · 15 Ideias de Renda Extra</span><span class="val">R$ 37</span></div>
+    <div class="stack-row"><span>Bônus · Guia de Primeiro Investimento</span><span class="val">R$ 47</span></div>
+    <div class="stack-row"><span>Bônus · Calculadora de Juros Compostos</span><span class="val">R$ 27</span></div>
+    <div class="stack-row"><span>Bônus · Checklist Anti-Recaída</span><span class="val">R$ 19</span></div>
+    <div class="stack-row total"><span>Valor total percebido</span><span class="val">R$ 274</span></div>
+  </div>
+
+  <div class="price-block reveal reveal-delay-2">
+    <span class="price-old">R$ 274</span>
+    <span class="price-new">R$ 54</span>
+    <span class="price-tail">à vista ou parcelado</span>
+  </div>
+  <div class="guarantee reveal reveal-delay-3">GARANTIA DE 7 DIAS · SEM PERGUNTAS</div>
+</section>
+
+<!-- FINAL -->
+<section class="section final">
+  <div class="eyebrow reveal" style="justify-content:center;">Seu recomeço começa hoje</div>
+  <h2 class="reveal reveal-delay-1">Cada mês do mesmo jeito é um mês a mais de angústia que dava para evitar.</h2>
+  <p class="sub reveal reveal-delay-2">O primeiro passo custa R$ 54 e leva 21 dias.</p>
+  <button class="btn reveal reveal-delay-3">Quero Começar Meu Recomeço Financeiro</button>
+
+  <div class="disclaimer reveal reveal-delay-4">
+    Conteúdo educacional. Não constitui recomendação individual de investimento e não garante resultado financeiro. Os resultados dependem exclusivamente da aplicação, do contexto e das decisões de cada pessoa.
+  </div>
+</section>
+
+<script>
+  const els = document.querySelectorAll('.reveal:not(.in)');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.15});
+  els.forEach(el=>io.observe(el));
+
+  const tlIo = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); } });
+  }, {threshold:0.4});
+  document.querySelectorAll('.tl-row').forEach(el=>tlIo.observe(el));
+</script>
+
+</body>
+</html>
